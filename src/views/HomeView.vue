@@ -26,8 +26,6 @@ export default {
 <script setup>
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
-import AppGrid from '@/components/AppGrid.vue';
-import AppCard from '@/components/AppCard.vue';
 import { inject } from 'vue';
 
 const route = useRoute();

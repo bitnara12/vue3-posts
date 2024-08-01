@@ -48,10 +48,6 @@
 </template>
 
 <script setup>
-import AppGrid from '@/components/AppGrid.vue';
-import AppCard from '@/components/AppCard.vue';
-import AppPagination from '@/components/AppPagination.vue';
-
 import PostItem from '@/components/posts/PostItem.vue';
 import PostDetailView from './PostDetailView.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
