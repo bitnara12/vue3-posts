@@ -6,12 +6,14 @@ import router from './router';
 import person from './plugins/person';
 // import globalComponents from './plugins/global-components';
 import globalDirectives from './plugins/global-directives';
+import dayjs from './plugins/dayjs';
 
 const app = createApp(App);
 // app.use(globalComponents);
-app.use(globalDirectives);
-app.use(person);
 app.use(router);
+app.use(person);
+app.use(globalDirectives);
+app.use(dayjs);
 app.mount('#app');
 
 import 'bootstrap/dist/js/bootstrap.js';

@@ -59,7 +59,7 @@ const edit = async () => {
   try {
     await updatePost(id, { ...form.value });
     vAlert('수정이 완료되었습니다!', 'success');
-    // router.push({ name: 'PostDetail', params: { id } });
+    router.push({ name: 'PostDetail', params: { id } });
   } catch (error) {
     console.error(error);
     vAlert(error.message);
