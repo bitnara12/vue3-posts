@@ -10,6 +10,7 @@
 
     <!-- 게시글 내용 (PostItem) -->
     <hr class="my-4" />
+
     <AppGrid :items="posts">
       <template v-slot="{ item }">
         <PostItem
