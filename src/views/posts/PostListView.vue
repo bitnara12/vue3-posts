@@ -7,28 +7,29 @@
       v-model:title="params.title_like"
       v-model:limit="params._limit"
     />
-
     <!-- 게시글 내용 (PostItem) -->
     <hr class="my-4" />
-
-    <AppGrid :items="posts">
-      <template v-slot="{ item }">
-        <PostItem
-          :title="item.title"
-          :content="item.content"
-          :created-at="item.createdAt"
-          @click="goPage(item.id)"
-          @modal="openModal(item)"
-        />
-      </template>
-    </AppGrid>
-
-    <!-- Pagination -->
-    <AppPagination
-      :current-page="params._page"
-      :page-count="pageCount"
-      @page="page => (params._page = page)"
-    />
+    <AppLoading v-if="loading" />
+    <AppError v-else-if="error" :message="error.message" />
+    <template v-else>
+      <AppGrid :items="posts">
+        <template v-slot="{ item }">
+          <PostItem
+            :title="item.title"
+            :content="item.content"
+            :created-at="item.createdAt"
+            @click="goPage(item.id)"
+            @modal="openModal(item)"
+          />
+        </template>
+      </AppGrid>
+      <!-- Pagination -->
+      <AppPagination
+        :current-page="params._page"
+        :page-count="pageCount"
+        @page="page => (params._page = page)"
+      />
+    </template>
 
     <!-- 모달 -->
     <Teleport to="#modal">
@@ -73,15 +74,22 @@ const pageCount = computed(() =>
   Math.ceil(totalCount.value / params.value._limit),
 );
 
+// 로딩, 에러
+const error = ref(null);
+const loading = ref(false);
+
 // 게시글 가져오기
 const posts = ref([]);
 const fetchPosts = async () => {
   try {
+    loading.value = true;
     const { data, headers } = await getPosts(params.value);
     posts.value = data;
     totalCount.value = headers['x-total-count'];
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    error.value = err;
+  } finally {
+    loading.value = false;
   }
 };
 // 반응형 상태가 변경되었을 때 해당 콜백함수를 다시 호출

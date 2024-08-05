@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <AppLoading v-if="loading" />
+  <AppError v-else-if="error" :message="error.message" />
+  <div v-else>
     <h2>게시글 수정</h2>
     <hr class="my-4" />
+    <AppError v-if="editError" :message="editError.message" />
     <PostForm
       @submit.prevent="edit"
       v-model:title="form.title"
@@ -15,7 +18,17 @@
         >
           취소
         </button>
-        <button class="btn btn-primary">수정</button>
+        <button class="btn btn-primary" :disabled="editLoading">
+          <template v-if="editLoading">
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span class="visually-hidden">Loading...</span>
+          </template>
+          <template v-else>수정</template>
+        </button>
       </template>
     </PostForm>
   </div>
@@ -33,20 +46,24 @@ const { vAlert, vSuccess } = useAlert();
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id;
-
 const form = ref({
   title: null,
   content: null,
 });
 
 // 게시글 가져오기
+const error = ref(null);
+const loading = ref(false);
+
 const fetchPost = async () => {
   try {
+    loading.value = true;
     const { data } = await getPostById(id);
     setForm(data);
-  } catch (error) {
-    console.error(error);
-    vAlert(error.message);
+  } catch (err) {
+    error.value = err;
+  } finally {
+    loading.value = false;
   }
 };
 const setForm = ({ title, content }) => {
@@ -56,14 +73,20 @@ const setForm = ({ title, content }) => {
 fetchPost();
 
 // 수정
+const editError = ref(null);
+const editLoading = ref(false);
+
 const edit = async () => {
   try {
+    editLoading.value = true;
     await updatePost(id, { ...form.value });
     vSuccess('수정이 완료되었습니다!');
     router.push({ name: 'PostDetail', params: { id } });
-  } catch (error) {
-    console.error(error);
-    vAlert(error.message);
+  } catch (err) {
+    editError.value = err;
+    vAlert(err.message);
+  } finally {
+    editLoading.value = false;
   }
 };
 
