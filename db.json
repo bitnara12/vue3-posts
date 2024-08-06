@@ -73,18 +73,6 @@
       "id": 19
     },
     {
-      "title": null,
-      "content": null,
-      "createdAt": 1722579349856,
-      "id": 20
-    },
-    {
-      "title": null,
-      "content": null,
-      "createdAt": 1722579351141,
-      "id": 21
-    },
-    {
       "title": "11112342342343",
       "content": "22222",
       "createdAt": 1722579404139,
@@ -97,10 +85,16 @@
       "id": 24
     },
     {
-      "title": "제목22",
-      "content": "내용22",
+      "title": "안녕하세요!!",
+      "content": "안녕하세요",
       "createdAt": 1722589157568,
       "id": 25
+    },
+    {
+      "title": "11111",
+      "content": "22222",
+      "createdAt": 1722907689002,
+      "id": 26
     }
   ]
 }

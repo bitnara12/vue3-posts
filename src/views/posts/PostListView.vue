@@ -55,9 +55,9 @@ import PostDetailView from './PostDetailView.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
 import PostModal from '@/components/posts/PostModal.vue';
 
-import { computed, ref, watchEffect } from 'vue';
-import { getPosts } from '@/api/posts';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAxios } from '@/hooks/useAxios';
 
 // pagination
 const params = ref({
@@ -69,32 +69,18 @@ const params = ref({
   content_like: '',
 });
 
-const totalCount = ref(0);
+// 게시글 가져오기
+const {
+  response,
+  data: posts,
+  error,
+  loading,
+} = useAxios('/posts', { params: params });
+
+const totalCount = computed(() => response.value.headers['x-total-count']);
 const pageCount = computed(() =>
   Math.ceil(totalCount.value / params.value._limit),
 );
-
-// 로딩, 에러
-const error = ref(null);
-const loading = ref(false);
-
-// 게시글 가져오기
-const posts = ref([]);
-const fetchPosts = async () => {
-  try {
-    loading.value = true;
-    const { data, headers } = await getPosts(params.value);
-    posts.value = data;
-    totalCount.value = headers['x-total-count'];
-  } catch (err) {
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
-};
-// 반응형 상태가 변경되었을 때 해당 콜백함수를 다시 호출
-// fetchPosts();
-watchEffect(fetchPosts);
 
 // 페이지 이동
 const router = useRouter();

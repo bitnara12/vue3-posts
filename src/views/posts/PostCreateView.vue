@@ -31,37 +31,38 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { createPost } from '@/api/posts';
 import PostForm from '@/components/posts/PostForm.vue';
 import { useAlert } from '@/composables/alert';
+import { useAxios } from '@/hooks/useAxios';
 
 const { vAlert, vSuccess } = useAlert();
-
 const router = useRouter();
+
+// 저장
 const form = ref({
   title: null,
   content: null,
 });
 
-const loading = ref(false);
-const error = ref(null);
+const { error, loading, excute } = useAxios(
+  '/posts',
+  {
+    method: 'post',
+  },
+  {
+    immediate: false,
+    onSuccess: () => {
+      vSuccess('등록이 완료되었습니다!');
+      router.push({ name: 'PostList' });
+    },
+    onError: err => {
+      vAlert(err.message);
+    },
+  },
+);
 
-// 저장
 const save = async () => {
-  try {
-    loading.value = true;
-    await createPost({
-      ...form.value,
-      createdAt: Date.now(),
-    });
-    vSuccess('등록이 완료되었습니다!');
-    router.push({ name: 'PostList' });
-  } catch (err) {
-    error.value = err;
-    vAlert('네트워크 오류');
-  } finally {
-    loading.value = false;
-  }
+  excute({ ...form.value, createdAt: Date.now() });
 };
 
 // 페이지 이동
