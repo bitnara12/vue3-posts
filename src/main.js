@@ -4,12 +4,11 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import person from './plugins/person';
-// import globalComponents from './plugins/global-components';
 import globalDirectives from './plugins/global-directives';
 import dayjs from './plugins/dayjs';
+import '@/assets/font.scss';
 
 const app = createApp(App);
-// app.use(globalComponents);
 app.use(router);
 app.use(person);
 app.use(globalDirectives);
